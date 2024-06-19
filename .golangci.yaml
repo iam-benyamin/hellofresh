@@ -249,7 +249,6 @@ linters:
     - goconst
     - gocyclo
 
-    # TODO and friends are ok.
     - godox
 
     # Check the error handling expressions. Too noisy.
