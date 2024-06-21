@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package userproto;
+option go_package = "contract/goproto/userproto";
+
+service UserService {
+  rpc Profile(ProfileRequest) returns (ProfileResponse);
+}
+
+message ProfileRequest {
+  string user_id = 1;
+}
+
+message ProfileResponse {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+}

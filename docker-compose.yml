@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+#
+#  # TO BE IMPLEMENTED
+#  order-service:
+#    image: hello-world
+
+  database:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    container_name: hellofresh-database
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    environment:
+      MYSQL_ROOT_PASSWORD: hellofreshRoo7t0lk2o20
+      MYSQL_DATABASE: hellofresh_db
+      MYSQL_USER: hellofresh
+      MYSQL_PASSWORD: hellofresh0lk2o20
+
+#  product-service:
+#    # image: rodolpheche/wiremock:2.23.2-alpine
+#    image: wiremock/wiremock
+#    command: --verbose
+#    volumes:
+#      - ./wiremock/product-service/stubs:/home/wiremock
+#    ports:
+#    - "8081:8080"
+#
+#  user-service:
+#    image: wiremock/wiremock
+#    # image: rodolpheche/wiremock:2.23.2-alpine
+#    command: --verbose
+#    volumes:
+#      - ./wiremock/user-service/stubs:/home/wiremock
+#    ports:
+#    - "8082:8080"
+#
+#  rabbitmq:
+#    image: rabbitmq:3.7.15-management-alpine
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=hellofresh
+#      - RABBITMQ_DEFAULT_PASS=food
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+
+volumes:
+  dbdata:

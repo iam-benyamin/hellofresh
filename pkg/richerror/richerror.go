@@ -3,7 +3,8 @@ package richerror
 type Kind int
 
 const (
-	KindUnknown Kind = iota + 1
+	KindUnexpected Kind = iota + 1
+	KindNotFound
 )
 
 type Op string
@@ -22,26 +23,31 @@ func New(op Op) RichError {
 
 func (r RichError) WithOp(op Op) RichError {
 	r.operation = op
+
 	return r
 }
 
 func (r RichError) WithErr(err error) RichError {
 	r.wrappedError = err
+
 	return r
 }
 
 func (r RichError) WithMessage(message string) RichError {
 	r.message = message
+
 	return r
 }
 
 func (r RichError) WithKind(kind Kind) RichError {
 	r.kind = kind
+
 	return r
 }
 
 func (r RichError) WithMeta(meta map[string]interface{}) RichError {
 	r.meta = meta
+
 	return r
 }
 
@@ -49,6 +55,7 @@ func (r RichError) Error() string {
 	if r.message == "" && r.wrappedError != nil {
 		return r.wrappedError.Error()
 	}
+
 	return r.message
 }
 
