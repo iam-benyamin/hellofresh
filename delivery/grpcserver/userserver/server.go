@@ -3,16 +3,17 @@ package userserver
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"log"
 	"net"
+	"sync"
 
 	"github.com/iam-benyamin/hellofresh/contract/goproto/userproto"
 	"github.com/iam-benyamin/hellofresh/param/userparam"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
 	"github.com/iam-benyamin/hellofresh/service/userservice"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type UserServer struct {
@@ -49,7 +50,7 @@ func (s UserServer) Profile(ctx context.Context, req *userproto.ProfileRequest) 
 	}, nil
 }
 
-func (s UserServer) Start() {
+func (s UserServer) Start(done <-chan bool, wg *sync.WaitGroup) {
 	address := fmt.Sprintf(":%d", 8086)
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
@@ -60,8 +61,18 @@ func (s UserServer) Start() {
 
 	userproto.RegisterUserServiceServer(grpcServer, s)
 
-	fmt.Println("Starting grpc server on " + address)
-	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatal("couldn't server presence grpc server")
-	}
+	wg.Add(1)
+	defer wg.Done()
+	go func() {
+		fmt.Println("Starting grpc server on " + address)
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatal("couldn't server presence grpc server")
+		}
+	}()
+
+	go func() {
+		<-done
+		grpcServer.GracefulStop()
+		fmt.Println("grpc server shutdown gracefully")
+	}()
 }

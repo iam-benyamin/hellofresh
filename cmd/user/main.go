@@ -1,6 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+
 	"github.com/iam-benyamin/hellofresh/delivery/grpcserver/userserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqluser"
@@ -9,6 +14,9 @@ import (
 )
 
 func main() {
+	done := make(chan bool)
+	wg := sync.WaitGroup{}
+
 	// TODO: read all configs from file
 	// TODO: logger
 	cfg := mysql.Config{
@@ -28,5 +36,18 @@ func main() {
 	userSVC := userservice.New(userMysql)
 
 	server := userserver.New(userSVC)
-	server.Start()
+
+	server.Start(done, &wg)
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+
+	fmt.Println("\nReceived interrupt signal, shutting down gracefully...")
+
+	done <- true
+	close(done)
+
+	wg.Wait()
+	fmt.Println("Bay Bay")
 }

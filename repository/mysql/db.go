@@ -26,7 +26,7 @@ func New(config Config) *MySQLDB {
 		config.Username, config.Password, config.Host, config.Port, config.DBName,
 	))
 	if err != nil {
-		panic(fmt.Errorf("can't open mysql db : %v", err))
+		panic(fmt.Errorf("can't open mysql db : %w", err))
 	}
 
 	db.SetConnMaxLifetime(time.Minute * 3)
