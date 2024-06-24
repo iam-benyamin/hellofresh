@@ -14,4 +14,4 @@ format:
 	@golangci-lint run --fix
 
 test:
-	go test .
+	go test ./...
