@@ -1,3 +1,8 @@
 protoc --go_out=. \
     --go-grpc_out=. \
     contract/protobuf/user/user.proto
+
+
+protoc --go_out=. \
+    --go-grpc_out=. \
+    contract/protobuf/product/product.proto

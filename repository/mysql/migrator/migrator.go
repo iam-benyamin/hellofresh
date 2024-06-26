@@ -14,12 +14,11 @@ type Migrator struct {
 	migrations *migrate.FileMigrationSource
 }
 
-func New(dbConfig mysql.Config) Migrator {
-	// TODO: get dialect and migration path from the params
+func New(dialect string, dbConfig mysql.Config, migrationPath string) Migrator {
 	return Migrator{
-		dialect:    "mysql",
+		dialect:    dialect,
 		dbConfig:   dbConfig,
-		migrations: &migrate.FileMigrationSource{Dir: "repository/mysql/mysqluser/migrations"},
+		migrations: &migrate.FileMigrationSource{Dir: migrationPath},
 	}
 }
 

@@ -3,6 +3,7 @@ module github.com/iam-benyamin/hellofresh
 go 1.22
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/rubenv/sql-migrate v1.6.1
 	github.com/stretchr/testify v1.8.0

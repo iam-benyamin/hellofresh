@@ -1,25 +1,40 @@
 version: "3.7"
 
 services:
-#
-#  # TO BE IMPLEMENTED
-#  order-service:
-#    image: hello-world
 
-  database:
+  #  # TO BE IMPLEMENTED
+  #  order-service:
+  #    image: hello-world
+  product-database:
     image: mysql:8.0
     ports:
-      - "3308:3306"
-    container_name: hellofresh-database
+      - "3307:3306"
+    container_name: product-database
     volumes:
-      - dbdata:/var/lib/mysql
+      - productDB:/var/lib/mysql
     restart: always
     command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     environment:
-      MYSQL_ROOT_PASSWORD: hellofreshRoo7t0lk2o20
-      MYSQL_DATABASE: hellofresh_db
+      MYSQL_ROOT_PASSWORD: Roo7t0lk2o20
+      MYSQL_DATABASE: product_db
       MYSQL_USER: hellofresh
-      MYSQL_PASSWORD: hellofresh0lk2o20
+      MYSQL_PASSWORD: productPassword
+
+
+  user-database:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    container_name: user-database
+    volumes:
+      - userDB:/var/lib/mysql
+    restart: always
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    environment:
+      MYSQL_ROOT_PASSWORD: Roo7t0lk2o20
+      MYSQL_DATABASE: user_db
+      MYSQL_USER: hellofresh
+      MYSQL_PASSWORD: userPassword
 
 #  product-service:
 #    # image: rodolpheche/wiremock:2.23.2-alpine
@@ -49,4 +64,5 @@ services:
 #      - "15672:15672"
 
 volumes:
-  dbdata:
+  productDB:
+  userDB:
