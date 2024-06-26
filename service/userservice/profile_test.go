@@ -2,10 +2,10 @@ package userservice_test
 
 import (
 	"context"
+	"github.com/iam-benyamin/hellofresh/entity/userentity"
 	"sync"
 	"testing"
 
-	"github.com/iam-benyamin/hellofresh/entity"
 	"github.com/iam-benyamin/hellofresh/param/userparam"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
@@ -14,39 +14,39 @@ import (
 )
 
 type InMemoryRepo struct {
-	data map[string]entity.User
+	data map[string]userentity.User
 	mu   sync.Mutex
 }
 
 func InMemoryUserRepo() *InMemoryRepo {
 	return &InMemoryRepo{
-		data: make(map[string]entity.User),
+		data: make(map[string]userentity.User),
 	}
 }
 
-func (r *InMemoryRepo) GetUserByID(ctx context.Context, userID string) (entity.User, error) {
+func (r *InMemoryRepo) GetUserByID(ctx context.Context, userID string) (userentity.User, error) {
 	user, ok := r.data[userID]
 	if !ok {
-		return entity.User{}, richerror.New("userservice_test.GetUserByID").WithMessage(errmsg.ErrorMsgNotFound).
+		return userentity.User{}, richerror.New("userservice_test.GetUserByID").WithMessage(errmsg.ErrorMsgNotFound).
 			WithKind(richerror.KindNotFound)
 	}
 	return user, nil
 }
 
-func (r *InMemoryRepo) AddUser(user entity.User) {
+func (r *InMemoryRepo) AddUser(user userentity.User) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.data[user.ID] = user
 }
 
-func TestService_Profile(t *testing.T) {
+func TestServiceProfile(t *testing.T) {
 	repo := InMemoryUserRepo()
 	service := userservice.New(repo)
 
 	ctx := context.Background()
 
-	repo.AddUser(entity.User{ID: "123", FirstName: "Milad", LastName: "Ahmadi"})
-	repo.AddUser(entity.User{ID: "456", FirstName: "Sara", LastName: "Moradi"})
+	repo.AddUser(userentity.User{ID: "123", FirstName: "Milad", LastName: "Ahmadi"})
+	repo.AddUser(userentity.User{ID: "456", FirstName: "Sara", LastName: "Moradi"})
 
 	scenarios := []struct {
 		name     string

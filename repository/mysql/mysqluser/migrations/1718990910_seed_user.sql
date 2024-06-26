@@ -7,4 +7,4 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `password`) VALUES ("d9e0f
 
 
 -- +migrate Down
-DELETE FROM `users` WHERE id in ("a1b2c3d4e5f6", "b7c8d9e0f1a2", "c3d4e5f6a7b8", "e5f6a7b8c9d0", d9e0f1a2b3c4);
+DELETE FROM `users` WHERE id in ("a1b2c3d4e5f6", "b7c8d9e0f1a2", "c3d4e5f6a7b8", "e5f6a7b8c9d0", "d9e0f1a2b3c4");

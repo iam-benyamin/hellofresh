@@ -15,6 +15,7 @@ type Migrator struct {
 }
 
 func New(dbConfig mysql.Config) Migrator {
+	// TODO: get dialect and migration path from the params
 	return Migrator{
 		dialect:    "mysql",
 		dbConfig:   dbConfig,
