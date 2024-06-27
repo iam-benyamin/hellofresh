@@ -18,8 +18,8 @@ func scanProduct(scanner mysql.Scanner) (productentity.Product, error) {
 	return product, err
 }
 
-func (d *DB) GetProductByID(ctx context.Context, ProductID string) (productentity.Product, error) {
-	const op = "mysqlproduct.GetProductByID"
+func (d *DB) GetProductByProductCode(ctx context.Context, ProductID string) (productentity.Product, error) {
+	const op = "mysqlproduct.GetProductByProductCode"
 
 	row := d.conn.Conn().QueryRowContext(ctx, `SELECT * FROM products WHERE id = ?`, ProductID)
 

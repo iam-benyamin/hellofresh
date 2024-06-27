@@ -9,7 +9,7 @@ import (
 func (s Service) Product(ctx context.Context, req productparam.ProductRequest) (productparam.ProductResponse, error) {
 	const op = "productservice.Product"
 
-	p, err := s.repo.GetProductByID(ctx, req.ProductCode)
+	p, err := s.repo.GetProductByProductCode(ctx, req.ProductCode)
 	if err != nil {
 		return productparam.ProductResponse{}, richerror.New(op).WithErr(err).WithKind(richerror.KindNotFound).
 			WithMeta(map[string]interface{}{"req": req})

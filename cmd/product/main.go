@@ -37,7 +37,6 @@ func main() {
 
 	productSVC := productservice.New(productMysql)
 
-	// TODO: server
 	server := productserver.New(productSVC)
 
 	server.Start(done, &wg)
