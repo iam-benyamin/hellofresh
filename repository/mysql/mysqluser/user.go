@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/iam-benyamin/hellofresh/entity/userentity"
 
+	"github.com/iam-benyamin/hellofresh/entity/userentity"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
@@ -19,10 +19,10 @@ func scanUser(scanner mysql.Scanner) (userentity.User, error) {
 	return user, err
 }
 
-func (d *DB) GetUserByID(ctx context.Context, UserID string) (userentity.User, error) {
+func (d *DB) GetUserByID(ctx context.Context, userID string) (userentity.User, error) {
 	const op = "mysqluser.GetUserByID"
 
-	row := d.conn.Conn().QueryRowContext(ctx, `SELECT * FROM users WHERE id = ?`, UserID)
+	row := d.conn.Conn().QueryRowContext(ctx, `SELECT * FROM users WHERE id = ?`, userID)
 
 	user, err := scanUser(row)
 	if err != nil {

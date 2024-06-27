@@ -3,6 +3,10 @@ package userserver
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+	"sync"
+
 	"github.com/iam-benyamin/hellofresh/contract/goproto/userproto"
 	"github.com/iam-benyamin/hellofresh/param/userparam"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
@@ -10,9 +14,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
-	"net"
-	"sync"
 )
 
 type UserServer struct {
@@ -67,8 +68,8 @@ func (s UserServer) Start(done <-chan bool, wg *sync.WaitGroup) {
 		}
 	}()
 
+	wg.Add(1)
 	go func() {
-		wg.Add(1)
 		defer wg.Done()
 		<-done
 		grpcServer.GracefulStop()

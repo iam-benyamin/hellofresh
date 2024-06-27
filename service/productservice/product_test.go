@@ -2,15 +2,16 @@ package productservice_test
 
 import (
 	"context"
+	"sync"
+	"testing"
+	"time"
+
 	"github.com/iam-benyamin/hellofresh/entity/productentity"
 	"github.com/iam-benyamin/hellofresh/param/productparam"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
 	"github.com/iam-benyamin/hellofresh/service/productservice"
 	"github.com/stretchr/testify/assert"
-	"sync"
-	"testing"
-	"time"
 )
 
 type InMemoryRepo struct {
@@ -24,7 +25,7 @@ func InMemoryUserRepo() *InMemoryRepo {
 	}
 }
 
-func (r *InMemoryRepo) GetProductByProductCode(ctx context.Context, userID string) (productentity.Product, error) {
+func (r *InMemoryRepo) GetProductByProductCode(_ context.Context, userID string) (productentity.Product, error) {
 	product, ok := r.data[userID]
 	if !ok {
 		return productentity.Product{}, richerror.New("productservice_test.GetProductByProductCode").WithMessage(errmsg.ErrorMsgNotFound).

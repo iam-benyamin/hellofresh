@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
 	"os"
 	"os/signal"
 	"sync"
 
 	"github.com/iam-benyamin/hellofresh/delivery/grpcserver/userserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
+	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqluser"
 	"github.com/iam-benyamin/hellofresh/service/userservice"
 )
@@ -31,7 +31,7 @@ func main() {
 	migrationPath := "repository/mysql/mysqluser/migrations"
 
 	mgr := migrator.New(dialect, cfg, migrationPath)
-	//mgr.Down()
+	// mgr.Down()
 	mgr.Up()
 
 	mysqlRepo := mysql.New(cfg)

@@ -2,10 +2,10 @@ package userservice_test
 
 import (
 	"context"
-	"github.com/iam-benyamin/hellofresh/entity/userentity"
 	"sync"
 	"testing"
 
+	"github.com/iam-benyamin/hellofresh/entity/userentity"
 	"github.com/iam-benyamin/hellofresh/param/userparam"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"

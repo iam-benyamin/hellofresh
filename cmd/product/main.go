@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+
 	"github.com/iam-benyamin/hellofresh/delivery/grpcserver/productserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqlproduct"
 	"github.com/iam-benyamin/hellofresh/service/productservice"
-	"os"
-	"os/signal"
-	"sync"
 )
 
 func main() {

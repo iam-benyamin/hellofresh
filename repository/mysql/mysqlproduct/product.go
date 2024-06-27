@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+
 	"github.com/iam-benyamin/hellofresh/entity/productentity"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
@@ -18,10 +19,10 @@ func scanProduct(scanner mysql.Scanner) (productentity.Product, error) {
 	return product, err
 }
 
-func (d *DB) GetProductByProductCode(ctx context.Context, ProductID string) (productentity.Product, error) {
+func (d *DB) GetProductByProductCode(ctx context.Context, productID string) (productentity.Product, error) {
 	const op = "mysqlproduct.GetProductByProductCode"
 
-	row := d.conn.Conn().QueryRowContext(ctx, `SELECT * FROM products WHERE id = ?`, ProductID)
+	row := d.conn.Conn().QueryRowContext(ctx, `SELECT * FROM products WHERE id = ?`, productID)
 
 	product, err := scanProduct(row)
 	if err != nil {
