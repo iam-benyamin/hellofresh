@@ -1,7 +1,7 @@
 -- +migrate Up
 CREATE TABLE `users`
 (
-    `id`         VARCHAR(36) PRIMARY KEY,
+    `id`         CHAR(12) PRIMARY KEY,
     `first_name` VARCHAR(191) NOT NULL,
     `last_name`  VARCHAR(191) NOT NULL,
     `password`   VARCHAR(191) NOT NULL,

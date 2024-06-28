@@ -24,7 +24,7 @@ func InMemoryUserRepo() *InMemoryRepo {
 	}
 }
 
-func (r *InMemoryRepo) GetUserByID(ctx context.Context, userID string) (userentity.User, error) {
+func (r *InMemoryRepo) GetUserByID(_ context.Context, userID string) (userentity.User, error) {
 	user, ok := r.data[userID]
 	if !ok {
 		return userentity.User{}, richerror.New("userservice_test.GetUserByID").WithMessage(errmsg.ErrorMsgNotFound).
