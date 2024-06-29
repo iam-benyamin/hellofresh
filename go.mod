@@ -5,7 +5,9 @@ go 1.22
 require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/labstack/echo/v4 v4.12.0
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/rubenv/sql-migrate v1.6.1
+	github.com/streadway/amqp v1.1.0
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.27.0
 	google.golang.org/grpc v1.64.0

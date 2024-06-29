@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/iam-benyamin/hellofresh/contract/goproto/productproto"
 	"github.com/iam-benyamin/hellofresh/contract/goproto/userproto"
+	"github.com/iam-benyamin/hellofresh/entity/orderentity"
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 	"github.com/iam-benyamin/hellofresh/param/productparam"
 	"github.com/iam-benyamin/hellofresh/param/userparam"
@@ -13,6 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderRequest) error {
@@ -46,6 +48,25 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 	}
 
 	// TODO: publish message
+	if err = s.broker.PublishCreatedOrder(ctx, orderparam.Message{
+		Producer: "",
+		SentAt:   "",
+		Type:     "",
+		Payload: orderparam.Payload{
+			Order: orderentity.Order{
+				ID:               "",
+				UserID:           "",
+				ProductCode:      "",
+				CustomerFullName: "",
+				ProductName:      "",
+				TotalAmount:      0,
+				CreatedAt:        time.Time{},
+			},
+		},
+	}, "created_order"); err != nil {
+		return richerror.New(op).WithErr(err).WithMessage(errmsg.ErrorMsgSomeThingWentWrong).
+			WithKind(richerror.KindUnexpected)
+	}
 
 	return nil
 }

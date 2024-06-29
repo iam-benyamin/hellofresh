@@ -30,7 +30,7 @@ func main() {
 	migrationPath := "repository/mysql/mysqlproduct/migrations"
 
 	mgr := migrator.New(dialect, cfg, migrationPath)
-	mgr.Down()
+	//mgr.Down()
 	mgr.Up()
 
 	mysqlRepo := mysql.New(cfg)

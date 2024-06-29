@@ -9,10 +9,15 @@ type repository interface {
 	SaveOrder(ctx context.Context, createOrder orderparam.SaveOrder) error
 }
 
-type Service struct {
-	repo repository
+type Broker interface {
+	PublishCreatedOrder(ctx context.Context, msg orderparam.Message, routingKey string) error
 }
 
-func New(repo repository) Service {
-	return Service{repo: repo}
+type Service struct {
+	repo   repository
+	broker Broker
+}
+
+func New(repo repository, broker Broker) Service {
+	return Service{repo: repo, broker: broker}
 }
