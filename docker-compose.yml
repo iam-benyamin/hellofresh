@@ -5,6 +5,8 @@ services:
   #  # TO BE IMPLEMENTED
   #  order-service:
   #    image: hello-world
+
+
   product-database:
     image: mysql:8.0
     ports:
@@ -19,7 +21,6 @@ services:
       MYSQL_DATABASE: product_db
       MYSQL_USER: hellofresh
       MYSQL_PASSWORD: productPassword
-
 
   user-database:
     image: mysql:8.0

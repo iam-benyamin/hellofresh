@@ -1,56 +1,38 @@
 package logger
 
 import (
-	"io"
-	"log/slog"
-	"os"
-
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"os"
+	"sync"
 )
 
-const (
-	defaultFilePath        = "logs/logs.json"
-	defaultUseLocalTime    = false
-	defaultFileMaxSizeInMB = 10
-	defaultFileAgeInDays   = 30
-)
+var Logger *zap.Logger
 
-type Config struct {
-	FilePath         string
-	UseLocalTime     bool
-	FileMaxSizeInMB  int
-	FileMaxAgeInDays int
-}
-
-var l *slog.Logger
+var once = sync.Once{}
 
 func init() {
-	fileWriter := &lumberjack.Logger{
-		Filename:  defaultFilePath,
-		LocalTime: defaultUseLocalTime,
-		MaxSize:   defaultFileMaxSizeInMB,
-		MaxAge:    defaultFileAgeInDays,
-	}
-	l = slog.New(
-		slog.NewJSONHandler(io.MultiWriter(fileWriter, os.Stdout), &slog.HandlerOptions{}),
-	)
-}
+	once.Do(func() {
+		Logger, _ = zap.NewProduction()
 
-func L() *slog.Logger {
-	return l
-}
+		config := zap.NewProductionEncoderConfig()
+		config.EncodeTime = zapcore.ISO8601TimeEncoder
+		defaultEncoder := zapcore.NewJSONEncoder(config)
+		writer := zapcore.AddSync(&lumberjack.Logger{
+			Filename:   "./logs/log.json",
+			LocalTime:  false,
+			MaxSize:    1,
+			MaxBackups: 2,
+			MaxAge:     3,
+		})
 
-func New(cfg Config, opt *slog.HandlerOptions) *slog.Logger {
-	fileWriter := &lumberjack.Logger{
-		Filename:  cfg.FilePath,
-		LocalTime: cfg.UseLocalTime,
-		MaxSize:   cfg.FileMaxSizeInMB,
-		MaxAge:    cfg.FileMaxAgeInDays,
-	}
-
-	logger := slog.New(
-		slog.NewJSONHandler(io.MultiWriter(fileWriter, os.Stdout), opt),
-	)
-
-	return logger
+		stdOutWriter := zapcore.AddSync(os.Stdout)
+		defaultLogLevel := zapcore.InfoLevel
+		core := zapcore.NewTee(
+			zapcore.NewCore(defaultEncoder, writer, defaultLogLevel),
+			zapcore.NewCore(defaultEncoder, stdOutWriter, zap.InfoLevel),
+		)
+		Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
+	})
 }
