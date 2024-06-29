@@ -7,6 +7,7 @@ import (
 	"github.com/iam-benyamin/hellofresh/logger"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/service/orderservice"
+	"github.com/iam-benyamin/hellofresh/validator/ordervaidator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
@@ -19,10 +20,10 @@ type OrderServer struct {
 	OrderHandler orderhandler.Handler
 }
 
-func New(OrderService orderservice.Service) OrderServer {
+func New(OrderService orderservice.Service, CreateOrderValidator ordervaidator.Validator) OrderServer {
 	return OrderServer{
 		Router:       echo.New(),
-		OrderHandler: orderhandler.New(OrderService),
+		OrderHandler: orderhandler.New(OrderService, CreateOrderValidator),
 	}
 }
 

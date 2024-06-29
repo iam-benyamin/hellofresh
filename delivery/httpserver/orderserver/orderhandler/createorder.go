@@ -11,11 +11,14 @@ import (
 
 func (h Handler) createOrder(c echo.Context) error {
 
-	// TODO: validate request body
 	var reqBody orderparam.CreateOrderRequest
 	err := c.Bind(&reqBody)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	if err := h.CreateOrderValidator.ValidateCrateOrderRequest(reqBody); err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
 	// TODO: the reqBody.ProductCode is actually a ProductID :D

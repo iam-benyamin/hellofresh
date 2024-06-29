@@ -47,7 +47,7 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 		return richerror.New(op).WithErr(err).WithMessage(errmsg.ErrorMsgCantCreateItem).WithKind(richerror.KindUnexpected)
 	}
 
-	// TODO: publish message
+	// TODO: use right data :|
 	if err = s.broker.PublishCreatedOrder(ctx, orderparam.Message{
 		Producer: "",
 		SentAt:   "",

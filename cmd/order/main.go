@@ -9,6 +9,7 @@ import (
 	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqlorder"
 	"github.com/iam-benyamin/hellofresh/service/orderservice"
+	"github.com/iam-benyamin/hellofresh/validator/ordervaidator"
 	"os"
 	"os/signal"
 	"sync"
@@ -46,11 +47,12 @@ func main() {
 		panic(err)
 	}
 	broker := orderrabbitmq.New(rabbitmqAdapter)
-	// TODO: rabbit broker gracefully shutdown
 
 	orderSVC := orderservice.New(orderMysql, broker)
 
-	server := orderserver.New(orderSVC)
+	validator := ordervaidator.New()
+
+	server := orderserver.New(orderSVC, validator)
 	server.Serve(done, &wg)
 
 	quit := make(chan os.Signal, 1)
@@ -58,6 +60,8 @@ func main() {
 	<-quit
 
 	fmt.Println("\nReceived interrupt signal, shutting user service down gracefully...")
+
+	rabbitmqAdapter.Close()
 
 	done <- true
 	close(done)
