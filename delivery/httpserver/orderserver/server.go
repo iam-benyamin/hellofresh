@@ -1,6 +1,7 @@
 package orderserver
 
 import (
+	"context"
 	"fmt"
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver/orderhandler"
 	"github.com/iam-benyamin/hellofresh/logger"
@@ -8,6 +9,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
+	"sync"
+	"time"
 )
 
 type OrderServer struct {
@@ -22,7 +25,7 @@ func New(OrderService orderservice.Service) OrderServer {
 	}
 }
 
-func (o OrderServer) Serve() {
+func (o OrderServer) Serve(done <-chan bool, wg *sync.WaitGroup) {
 	o.Router.Use(middleware.RequestID())
 	o.Router.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogURI:           true,
@@ -65,8 +68,24 @@ func (o OrderServer) Serve() {
 	o.Router.GET("/heath-check/", o.healthCheck)
 	o.OrderHandler.SetOrderRoutes(o.Router)
 
-	address := fmt.Sprintf(":%d", 1323)
-	if err := o.Router.Start(address); err != nil {
-		fmt.Println("router start error ", err)
-	}
+	go func() {
+		address := fmt.Sprintf(":%d", 1323)
+		if err := o.Router.Start(address); err != nil {
+			fmt.Println("router start error ", err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		<-done
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := o.Router.Shutdown(ctx); err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("order http server shutdown gracefully")
+	}()
 }

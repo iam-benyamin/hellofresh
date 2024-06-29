@@ -2,11 +2,11 @@ package orderhandler
 
 import (
 	"context"
-	"fmt"
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 	"github.com/iam-benyamin/hellofresh/pkg/httpmsg"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"time"
 )
 
 func (h Handler) createOrder(c echo.Context) error {
@@ -18,11 +18,10 @@ func (h Handler) createOrder(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 
-	fmt.Println("createOrderRequest")
-	fmt.Println(reqBody)
-
 	// TODO: the reqBody.ProductCode is actually a ProductID :D
-	err = h.OrderService.CreateNewOrder(context.Background(), orderparam.CreateOrderRequest{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(2*time.Second))
+	defer cancel()
+	err = h.OrderService.CreateNewOrder(ctx, orderparam.CreateOrderRequest{
 		UserID:      reqBody.UserID,
 		ProductCode: reqBody.ProductCode,
 	})

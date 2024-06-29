@@ -1,14 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqlorder"
 	"github.com/iam-benyamin/hellofresh/service/orderservice"
+	"os"
+	"os/signal"
+	"sync"
 )
 
 func main() {
+	done := make(chan bool)
+	wg := sync.WaitGroup{}
+
 	cfg := mysql.Config{
 		Host:     "localhost",
 		Port:     3309,
@@ -29,23 +36,18 @@ func main() {
 
 	orderSVC := orderservice.New(orderMysql)
 
-	// start order server
 	server := orderserver.New(orderSVC)
-	server.Serve()
+	server.Serve(done, &wg)
 
-	// TODO: don't forget remove this faker
-	//fakeRequest := orderparam.CreateOrderRequest{
-	//	UserID:      "b7c8d9e0f1a2",
-	//	ProductCode: "b2c3d4e5f6g7",
-	//}
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer cancel()
-	//
-	//err := orderSVC.CreateNewOrder(ctx, fakeRequest)
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
 
-	// get user profile with UserID
+	fmt.Println("\nReceived interrupt signal, shutting user service down gracefully...")
 
+	done <- true
+	close(done)
+
+	wg.Wait()
+	fmt.Println("I hope to see you soon")
 }
