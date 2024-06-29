@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver/orderhandler"
 	"github.com/iam-benyamin/hellofresh/logger"
+	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/service/orderservice"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -64,6 +65,14 @@ func (o OrderServer) Serve(done <-chan bool, wg *sync.WaitGroup) {
 	}))
 
 	o.Router.Use(middleware.Recover())
+	o.Router.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+		Skipper:      middleware.DefaultSkipper,
+		ErrorMessage: errmsg.ErrorMsgSomeThingWentWrong,
+		OnTimeoutRouteErrorHandler: func(err error, c echo.Context) {
+			logger.Logger.Error("time Out")
+		},
+		Timeout: 3 * time.Second,
+	}))
 
 	o.Router.GET("/heath-check/", o.healthCheck)
 	o.OrderHandler.SetOrderRoutes(o.Router)
