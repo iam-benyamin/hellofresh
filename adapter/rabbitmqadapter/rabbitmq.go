@@ -29,6 +29,7 @@ func New(config Config, exchange string) (*RabbitMQAdapter, error) {
 	ch, err := conn.Channel()
 	if err != nil {
 		_ = conn.Close()
+
 		return nil, err
 	}
 
@@ -44,6 +45,7 @@ func New(config Config, exchange string) (*RabbitMQAdapter, error) {
 	if err != nil {
 		_ = ch.Close()
 		_ = conn.Close()
+
 		return nil, err
 	}
 

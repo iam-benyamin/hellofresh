@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"sync"
 
+	"github.com/iam-benyamin/hellofresh/config"
 	"github.com/iam-benyamin/hellofresh/delivery/grpcserver/productserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
@@ -17,23 +18,18 @@ func main() {
 	done := make(chan bool)
 	wg := sync.WaitGroup{}
 
+	cfg := config.Load("config.yaml")
+
 	// TODO: read all configs from file
 	// TODO: logger
-	cfg := mysql.Config{
-		Host:     "localhost",
-		Port:     3307,
-		Username: "hellofresh",
-		Password: "productPassword",
-		DBName:   "product_db",
-	}
 	dialect := "mysql"
 	migrationPath := "repository/mysql/mysqlproduct/migrations"
 
-	mgr := migrator.New(dialect, cfg, migrationPath)
+	mgr := migrator.New(dialect, cfg.ProductDB, migrationPath)
 	// mgr.Down()
 	mgr.Up()
 
-	mysqlRepo := mysql.New(cfg)
+	mysqlRepo := mysql.New(cfg.ProductDB)
 	productMysql := mysqlproduct.New(mysqlRepo)
 
 	productSVC := productservice.New(productMysql)

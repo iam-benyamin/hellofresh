@@ -1,0 +1,23 @@
+user_db:
+  host: localhost
+  port: 3308
+  username: hellofresh
+  password: userPassword
+  db_name: user_db
+order_db:
+  host: localhost
+  port: 3309
+  username: hellofresh
+  password: orderPassword
+  db_name: order_db
+order_rmq:
+  user: hellofresh
+  password: food
+  host: localhost
+  port: 5672
+product_db:
+  host: localhost
+  port: 3307
+  username: hellofresh
+  password: productPassword
+  db_name: product_db

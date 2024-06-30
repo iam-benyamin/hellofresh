@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"log"
+
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"log"
 )
 
 func failOnError(err error, msg string) {
@@ -72,6 +73,7 @@ func main() {
 			err := json.Unmarshal(d.Body, &message)
 			if err != nil {
 				log.Printf("Error decoding JSON: %s", err)
+
 				continue
 			}
 

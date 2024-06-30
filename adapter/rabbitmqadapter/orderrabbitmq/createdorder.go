@@ -30,5 +30,6 @@ func (a Adapter) PublishCreatedOrder(ctx context.Context, msg orderparam.Message
 	}
 
 	log.Printf(" [x] Sent %s", body)
+
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/iam-benyamin/hellofresh/adapter/rabbitmqadapter"
 	"github.com/iam-benyamin/hellofresh/adapter/rabbitmqadapter/orderrabbitmq"
+	"github.com/iam-benyamin/hellofresh/config"
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver"
 	"github.com/iam-benyamin/hellofresh/repository/mysql"
 	"github.com/iam-benyamin/hellofresh/repository/mysql/migrator"
@@ -20,30 +21,19 @@ func main() {
 	done := make(chan bool)
 	wg := sync.WaitGroup{}
 
-	cfg := mysql.Config{
-		Host:     "localhost",
-		Port:     3309,
-		Username: "hellofresh",
-		Password: "orderPassword",
-		DBName:   "order_db",
-	}
+	cfg := config.Load("config.yaml")
 
 	dialect := "mysql"
 	migrationPath := "repository/mysql/mysqlorder/migrations"
 
-	mgr := migrator.New(dialect, cfg, migrationPath)
+	mgr := migrator.New(dialect, cfg.OrderDB, migrationPath)
 	// mgr.Down()
 	mgr.Up()
 
-	mysqlRepo := mysql.New(cfg)
+	mysqlRepo := mysql.New(cfg.OrderDB)
 	orderMysql := mysqlorder.New(mysqlRepo)
 
-	rabbitmqAdapter, err := rabbitmqadapter.New(rabbitmqadapter.Config{
-		User:     "hellofresh",
-		Password: "food",
-		Host:     "localhost",
-		Port:     5672,
-	}, "orders")
+	rabbitmqAdapter, err := rabbitmqadapter.New(cfg.OrderRMQ, "orders")
 	if err != nil {
 		panic(err)
 	}

@@ -21,10 +21,10 @@ type OrderServer struct {
 	OrderHandler orderhandler.Handler
 }
 
-func New(OrderService orderservice.Service, CreateOrderValidator ordervaidator.Validator) OrderServer {
+func New(orderService orderservice.Service, createOrderValidator ordervaidator.Validator) OrderServer {
 	return OrderServer{
 		Router:       echo.New(),
-		OrderHandler: orderhandler.New(OrderService, CreateOrderValidator),
+		OrderHandler: orderhandler.New(orderService, createOrderValidator),
 	}
 }
 

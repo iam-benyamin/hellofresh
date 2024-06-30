@@ -22,7 +22,7 @@ func (h Handler) createOrder(c echo.Context) error {
 	}
 
 	// TODO: the reqBody.ProductCode is actually a ProductID :D
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(2*time.Second))
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	err = h.OrderService.CreateNewOrder(ctx, orderparam.CreateOrderRequest{
 		UserID:      reqBody.UserID,
@@ -30,6 +30,7 @@ func (h Handler) createOrder(c echo.Context) error {
 	})
 	if err != nil {
 		msg, code := httpmsg.Error(err)
+
 		return c.JSON(code, echo.Map{
 			"message": msg,
 		})

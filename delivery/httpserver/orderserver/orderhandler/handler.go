@@ -10,6 +10,6 @@ type Handler struct {
 	CreateOrderValidator ordervaidator.Validator
 }
 
-func New(orderService orderservice.Service, CreateOrderValidator ordervaidator.Validator) Handler {
-	return Handler{OrderService: orderService}
+func New(orderService orderservice.Service, createOrderValidator ordervaidator.Validator) Handler {
+	return Handler{OrderService: orderService, CreateOrderValidator: createOrderValidator}
 }
