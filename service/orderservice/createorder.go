@@ -25,8 +25,7 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 	// user at that level and append user info to request
 	p, err := fetchProduct(ctx, req.ProductCode)
 	if err != nil {
-		fmt.Println("FetchDataFromProduct", err)
-		return richerror.New(op)
+		return richerror.New(op).WithErr(err).WithMessage(errmsg.ErrorMsgNotFound).WithKind(richerror.KindNotFound)
 	}
 
 	// TODO: have a cache layer (i.e. redis) save the products at the cache and don't call

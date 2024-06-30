@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	GetProductByProductCode(ctx context.Context, ProductID string) (productentity.Product, error)
+	GetProductByProductCode(ctx context.Context, ProductCode string) (productentity.Product, error)
 }
 
 type Service struct {
