@@ -23,20 +23,34 @@ Follow the instructions below to set up and run the application.
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/iam-benyamin/hellofresh.git
-   cd hellofresh
-   ```
-2. Build and start the Docker containers:
-   ```docker compose up --build -d```
+    ```bash
+    git clone https://github.com/iam-benyamin/hellofresh.git
+    cd hellofresh
+    ```
 
-3. Run the Go services:
+2. Build and start the Docker containers for databases and rabbitmq:
 
-```bash
-go run ./cmd/user/main.go
-go run ./cmd/product/main.go
-go run ./cmd/order/main.go
-```
+    ```bash
+    docker compose up --build -d
+    ```
+
+3. Install dependencies Run the Go services
+
+    ```bash
+    go mod tidy
+    ```
+
+    ```bash
+    go run ./cmd/user/main.go
+    ```
+
+    ```bash
+    go run ./cmd/product/main.go
+    ```
+
+    ```bash
+    go run ./cmd/order/main.go
+    ```
 
 ### API Documentation
 
@@ -46,25 +60,24 @@ To interact with the endpoints, you can import the Postman documentation provide
 
 The project is organized into several directories:
 
-`adapter/`: Contains third party adapter-related code. like rabbitmq 
-`cmd/`: Contains the main applications for each microservice.
-`user/`: Handles user management (registration, authentication, etc.).
-`config/`: Contains code that responsible for read environment variables form file or os env
-`contract/`: Contains protobuf contracts.
-`delivery/`: Delivery logic like grpc for product and user and http for order.
-`docs/`: Contains documentation files, including Postman collections.
-`entity/`: Defines entities and data structures.
-`logger/`: Logging utilities and configurations.
-`logs/`: Directory for log files.
-`param/`: Parameter definitions.
-`pkg/`: Contains utility packages.
-`repository/`: Data access layer and repository implementations.
-`serve/`: Server configurations and initialization.
-`service/`: Business logic and service layer.
-`validator/`: Validation logic and utilities.
-`proto_compile_code/`: list of command for compile protobuf code.
-`.golangci.yaml`: Configuration file for GolangCI-Lint.
-`config.yaml`: Application configuration file.
-
+`adapter/`: Contains third party adapter-related code. like rabbitmq \
+`cmd/`: Contains the main applications for each microservice. \
+`user/`: Handles user management (registration, authentication, etc.). \
+`config/`: Contains code that responsible for read environment variables form file or os env \
+`contract/`: Contains protobuf contracts. \
+`delivery/`: Delivery logic like grpc for product and user and http for order. \
+`docs/`: Contains documentation files, including Postman collections. \
+`entity/`: Defines entities and data structures. \
+`logger/`: Logging utilities and configurations. \
+`logs/`: Directory for log files. \
+`param/`: Parameter definitions. \
+`pkg/`: Contains utility packages. \
+`repository/`: Data access layer and repository implementations. \
+`serve/`: Server configurations and initialization. \
+`service/`: Business logic and service layer. \
+`validator/`: Validation logic and utilities. \
+`proto_compile_code/`: list of command for compile protobuf code. \
+`.golangci.yaml`: Configuration file for GolangCI-Lint. \
+`config.yaml`: Application configuration file. 
 
 have fine ;)
