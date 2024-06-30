@@ -3,9 +3,10 @@ package orderrabbitmq
 import (
 	"context"
 	"encoding/json"
+	"log"
+
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"log"
 )
 
 func (a Adapter) PublishCreatedOrder(ctx context.Context, msg orderparam.Message, routingKey string) error {

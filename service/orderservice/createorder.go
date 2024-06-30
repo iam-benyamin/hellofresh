@@ -3,6 +3,8 @@ package orderservice
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/iam-benyamin/hellofresh/contract/goproto/productproto"
 	"github.com/iam-benyamin/hellofresh/contract/goproto/userproto"
 	"github.com/iam-benyamin/hellofresh/entity/orderentity"
@@ -14,7 +16,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderRequest) error {
@@ -29,14 +30,14 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 	}
 
 	// TODO: have a cache layer (i.e. redis) save the products at the cache and don't call
-	// another service every time (reduce load and increasing latency) for and we can listen
+	// another service every time (reduce load and increasing latency) to expire we can listen
 	// to the queue the broadcast product updated
 	u, err := fetchUserProfile(ctx, req.UserID)
 	if err != nil {
 		return richerror.New(op).WithErr(err)
 	}
 
-	err = s.repo.SaveOrder(ctx, orderparam.SaveOrder{
+	createdOrderID, err := s.repo.SaveOrder(ctx, orderparam.SaveOrder{
 		UserID:           u.ID,
 		ProductCode:      p.Code,
 		CustomerFullName: fmt.Sprintf("%s %s", u.FirstName, u.LastName),
@@ -47,20 +48,21 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 		return richerror.New(op).WithErr(err).WithMessage(errmsg.ErrorMsgCantCreateItem).WithKind(richerror.KindUnexpected)
 	}
 
-	// TODO: use right data :|
+	// CreatedAt TODO: I think it's better to get CreatedAt from the DB
+	// i.e. order, err := s.repo.GetOrderByID(context.Context, createdOrderID)
 	if err = s.broker.PublishCreatedOrder(ctx, orderparam.Message{
-		Producer: "",
-		SentAt:   "",
-		Type:     "",
+		Producer: op,
+		SentAt:   time.Now().String(),
+		Type:     "order_created",
 		Payload: orderparam.Payload{
 			Order: orderentity.Order{
-				ID:               "",
-				UserID:           "",
-				ProductCode:      "",
-				CustomerFullName: "",
-				ProductName:      "",
-				TotalAmount:      0,
-				CreatedAt:        time.Time{},
+				ID:               createdOrderID,
+				UserID:           u.ID,
+				ProductCode:      p.Code,
+				CustomerFullName: fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+				ProductName:      p.Name,
+				TotalAmount:      p.Price,
+				CreatedAt:        time.Now(),
 			},
 		},
 	}, "created_order"); err != nil {
@@ -74,7 +76,7 @@ func (s Service) CreateNewOrder(ctx context.Context, req orderparam.CreateOrderR
 func fetchUserProfile(ctx context.Context, userID string) (userparam.ProfileResponse, error) {
 	const op = "orderservice.fetchUserProfile"
 
-	//TODO: technical dept - WithInsecure and WithBlock and Dial is deprecated
+	// TODO: technical dept - WithInsecure and WithBlock and Dial is deprecated
 	conn, err := grpc.Dial("localhost:8086", grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return userparam.ProfileResponse{}, richerror.New(op).WithErr(err).WithKind(richerror.KindNotFound).

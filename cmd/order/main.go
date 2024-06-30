@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+
 	"github.com/iam-benyamin/hellofresh/adapter/rabbitmqadapter"
 	"github.com/iam-benyamin/hellofresh/adapter/rabbitmqadapter/orderrabbitmq"
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver"
@@ -10,9 +14,6 @@ import (
 	"github.com/iam-benyamin/hellofresh/repository/mysql/mysqlorder"
 	"github.com/iam-benyamin/hellofresh/service/orderservice"
 	"github.com/iam-benyamin/hellofresh/validator/ordervaidator"
-	"os"
-	"os/signal"
-	"sync"
 )
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
 	migrationPath := "repository/mysql/mysqlorder/migrations"
 
 	mgr := migrator.New(dialect, cfg, migrationPath)
-	//mgr.Down()
+	// mgr.Down()
 	mgr.Up()
 
 	mysqlRepo := mysql.New(cfg)

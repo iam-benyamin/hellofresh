@@ -1,9 +1,10 @@
 package httpmsg
 
 import (
+	"net/http"
+
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
 	"github.com/iam-benyamin/hellofresh/pkg/richerror"
-	"net/http"
 )
 
 func Error(err error) (message string, code int) {

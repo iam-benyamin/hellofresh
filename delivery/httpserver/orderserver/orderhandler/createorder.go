@@ -2,15 +2,15 @@ package orderhandler
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 	"github.com/iam-benyamin/hellofresh/pkg/httpmsg"
 	"github.com/labstack/echo/v4"
-	"net/http"
-	"time"
 )
 
 func (h Handler) createOrder(c echo.Context) error {
-
 	var reqBody orderparam.CreateOrderRequest
 	err := c.Bind(&reqBody)
 	if err != nil {

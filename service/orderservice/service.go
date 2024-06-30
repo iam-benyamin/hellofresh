@@ -2,11 +2,12 @@ package orderservice
 
 import (
 	"context"
+
 	"github.com/iam-benyamin/hellofresh/param/orderparam"
 )
 
 type repository interface {
-	SaveOrder(ctx context.Context, createOrder orderparam.SaveOrder) error
+	SaveOrder(ctx context.Context, createOrder orderparam.SaveOrder) (string, error)
 }
 
 type Broker interface {

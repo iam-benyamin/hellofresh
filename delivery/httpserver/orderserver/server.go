@@ -3,6 +3,9 @@ package orderserver
 import (
 	"context"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/iam-benyamin/hellofresh/delivery/httpserver/orderserver/orderhandler"
 	"github.com/iam-benyamin/hellofresh/logger"
 	"github.com/iam-benyamin/hellofresh/pkg/errmsg"
@@ -11,8 +14,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
-	"sync"
-	"time"
 )
 
 type OrderServer struct {
