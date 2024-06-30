@@ -22,6 +22,7 @@ type MySQLDB struct {
 }
 
 func New(config Config) *MySQLDB {
+	// TODO: implement retry policy to check if DB is ready or not
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(%s:%d)/%s?parseTime=true",
 		config.Username, config.Password, config.Host, config.Port, config.DBName,
 	))

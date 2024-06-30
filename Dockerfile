@@ -11,11 +11,14 @@ RUN go mod download && go mod verify
 
 COPY . .
 
-RUN go build -o /app/hellofresh
+ARG SERVICE
 
+RUN go build -o /app/bin/${SERVICE} /app/cmd/${SERVICE}/main.go
 
-FROM  alpine:3.19 AS RUN
+FROM alpine:3.19 AS run
 
-COPY --from=build /app/hellofresh /bin/hellofresh
+ARG SERVICE
 
-CMD ["/bin/hellofresh"]
+COPY config.yaml /bin/config.yaml
+
+COPY --from=build /app/bin/${SERVICE} /bin/

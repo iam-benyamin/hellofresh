@@ -2,10 +2,38 @@ version: "3.7"
 
 services:
 
-  #  # TO BE IMPLEMENTED
-  #  order-service:
-  #    image: hello-world
-
+#  user-service:
+#    build:
+#      context: .
+#      args:
+#        SERVICE: user
+#    command: [ "/bin/user" ]
+#    ports:
+#      - "8086:8086"
+#    depends_on:
+#      - user-database
+#
+#  order-service:
+#    build:
+#      context: .
+#      args:
+#        SERVICE: order
+#    command: [ "/bin/order" ]
+#    ports:
+#      - "1323:1323"
+#    depends_on:
+#      - order-database
+#
+#  product-service:
+#    build:
+#      context: .
+#      args:
+#        SERVICE: product
+#    command: [ "/bin/product" ]
+#    ports:
+#      - "8087:8087"
+#    depends_on:
+#      - product-database
 
   product-database:
     image: mysql:8.0
@@ -36,6 +64,10 @@ services:
       MYSQL_DATABASE: user_db
       MYSQL_USER: hellofresh
       MYSQL_PASSWORD: userPassword
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
 
   order-database:
     image: mysql:8.0
@@ -51,21 +83,10 @@ services:
       MYSQL_DATABASE: order_db
       MYSQL_USER: hellofresh
       MYSQL_PASSWORD: orderPassword
-
-#  product-service:
-#    # image: rodolpheche/wiremock:2.23.2-alpine
-#    image: wiremock/wiremock
-#    command: --verbose
-#    volumes:
-#      - ./wiremock/product-service/stubs:/home/wiremock
-#    ports:
-#    - "8081:8080"
-
-#  user-service:
-#    build:
-#      context: .
-#    ports:
-#    - "8086:8086"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
 
   rabbitmq:
     image: rabbitmq:3.7.15-management-alpine
@@ -75,6 +96,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   productDB:
