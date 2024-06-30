@@ -1,0 +1,55 @@
+@base=http://localhost:1323
+
+### Create a new Order  01
+
+POST {{base}}/orders/
+Content-Type: application/json
+
+{
+  "user_id": "a1b2c3d4e5f6",
+  "product_code": "family-box"
+}
+
+
+### Create a new Order 02
+
+POST {{base}}/orders/
+Content-Type: application/json
+
+{
+  "user_id": "a1b2c3d4e5f6",
+  "product_code": "veggie-box"
+}
+
+#### Create a new Order 03
+
+POST {{base}}/orders/
+Content-Type: application/json
+
+{
+  "user_id": "a1b2c3d4e5f6",
+  "product_code": "classic-box"
+}
+
+### Create a new Order 04
+
+POST {{base}}/orders/
+Content-Type: application/json
+
+{
+  "user_id": "a1b2c3d4e5f6",
+  "product_code": "fast-food-box"
+}
+
+#### Create a new Order 05
+
+POST {{base}}/orders/
+Content-Type: application/json
+
+{
+  "user_id": "a1b2c3d444f6",
+  "product_code": "family-box"
+}
+
+
+
