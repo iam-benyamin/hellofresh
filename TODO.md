@@ -1,7 +1,5 @@
 *** Tasks ***
 
-1. [X] publish right message
-2. [X] read configs from files
-3. [X] get product with code not id
-4. [ ] dockerized go apps and use 
-5. [ ] add document
+
+1. [ ] dockerized go apps and use 
+2. [ ] add document

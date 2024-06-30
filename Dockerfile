@@ -18,6 +18,4 @@ FROM  alpine:3.19 AS RUN
 
 COPY --from=build /app/hellofresh /bin/hellofresh
 
-EXPOSE 1986
-
 CMD ["/bin/hellofresh"]
